@@ -20,3 +20,15 @@ class NeuralNetwork:
         for w, b in zip(self.weights, self.biases):
             x = self.rectifier(np.matmul(w,x)+b)
         return self.softmax(x)
+
+    def cost(self, x, y):
+        s = 0
+        for i,j in zip(self.predict(x),y):
+            s += (i - j)**2
+        return s
+
+    def costAvg(self, x, y):
+        s = 0
+        for i,j in zip(x, y):
+            s += self.cost(i,j)
+        return s/len(x)
