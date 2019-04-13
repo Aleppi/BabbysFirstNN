@@ -9,10 +9,10 @@ def labelArrCreator(x):
 
 
 data = mn.train_images()/255
+data.shape = (len(mn.train_images()),-1,1)
 labels = [labelArrCreator(i) for i in mn.train_labels()]
 
-layer_sizes = (784,5,5,10)
+layer_sizes = (784,10,16,10)
 
 NN = nn.NeuralNetwork(layer_sizes)
-
-print(NN.costAvg(data,labels))
+print(NN.layerErr(data[0], labels[0], 2).shape)
