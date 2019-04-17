@@ -14,5 +14,10 @@ labels = [labelArrCreator(i) for i in mn.train_labels()]
 
 layer_sizes = (784,10,16,10)
 
+#training_data = ( for x,y in zip(data, labels))
+
+#mini_batch = (data[:10].reshape(784,1),labels[:10].reshape(10,1))
+
 NN = nn.NeuralNetwork(layer_sizes)
-print(NN.layerErr(data[0], labels[0], 2).shape)
+#print(training_data)
+#NN.update_mini_batch(mini_batch, 3)

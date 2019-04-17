@@ -4,6 +4,7 @@ import numpy as np
 class NeuralNetwork:
     def __init__(self, layer_sizes):
         layer_shapes = [layer_sizes[i+1:i-len(layer_sizes)-1:-1] for i in range(len(layer_sizes)-1)]
+        self.layer_sizes = layer_sizes
         self.weights = [np.random.standard_normal(i) for i in layer_shapes]
         self.biases = [np.zeros((i[0], 1)) for i in layer_shapes]
         self.layer_count = len(layer_sizes)
@@ -47,3 +48,25 @@ class NeuralNetwork:
             return self.costprime(x, y)*self.rectifierprime(self.weightedInput(x, self.layer_count - 1))
         return (np.matmul(self.weights[l].T,self.layerErr(x, y, l+1)))*self.rectifierprime(self.weightedInput(x, l))
 
+    def partialBias(self, x, y, l, j):
+        return self.layerErr(x, y, l)[j]
+
+    def partialWeight(self, x, y, l, j, k):
+        return self.rectifier(self.weightedInput(x, l-1)[k])*self.layerErr(x, y, l)[j]
+
+    def backprop(self, x, y):
+        nabla_b = [np.zeros(b.shape) for b in self.biases]
+        nabla_w = [np.zeros(w.shape) for w in self.weights]
+        for l,i in enumerate(self.layer_sizes[1:]):
+            for j in range(i):
+                nabla_b[l][j] = self.partialBias(x, y, l+1, j)
+                for k in range(self.weights[l].shape[1]):
+                    nabla_w[l][j,k] = self.partialWeight(x, y, l+1, j, k)
+        return (nabla_b, nabla_w)
+    
+   # def update_mini_batch(self, mini_batch, eta):
+   #     nabla_b = [np.zeros(b.shape) for b in self.biases]
+   #     nabla_w = [np.zeros(w.shape) for w in self.weights]
+   #     for x,y in mini_batch:
+   #         delta_nabla_b, delta_nabla_w = self.backprop(x, y)
+   #         print(type(delta_nabla_w))
